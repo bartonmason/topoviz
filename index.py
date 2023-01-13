@@ -70,7 +70,7 @@ header = """
 
         <div id='appheader' class='appheader'>
             <div id='appheadertitle' class='left'>
-                <h1>Backbone Topology Visualizer</h1>
+                <h1>Apple Backbone Topology Visualizer</h1>
             </div>
             <div class='clear'> </div>
         </div> <!-- app header -->
