@@ -305,23 +305,23 @@ def process_xml(proto, opt, tmpfile, filepath):
     except subprocess.CalledProcessError:
        error_out("Input file is not XML formatted")
 
-    # Check if hosts file was uploaded
-    if "host_file" in form and form["host_file"].filename:
-        try:
-            host_file = form["host_file"]
-            # strip leading path from file name to avoid
-            # directory traversal attacks
-            fn = os.path.basename(host_file.filename)
-            tmpfile = f"/tmp/{fn}"
-            with open(tmpfile, "wb") as foo:
-                foo.write(host_file.file.read())
-        except OSError:
-            error_out("unable to read from host file, or write its contents to /tmp")
-        try:
-            cmd = f"cat '{tmpfile}' | perl host_replace_{proto}.pl {filepath}"
-            cmd_out = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as exc:
-            error_out("loopback conversion failed with error {}:\n".format(exc.output.decode()))
+#    # Check if hosts file was uploaded
+#    if "host_file" in form and form["host_file"].filename:
+#        try:
+#            host_file = form["host_file"]
+#            # strip leading path from file name to avoid
+#            # directory traversal attacks
+#            fn = os.path.basename(host_file.filename)
+#            tmpfile = f"/tmp/{fn}"
+#            with open(tmpfile, "wb") as foo:
+#                foo.write(host_file.file.read())
+#        except OSError:
+#            error_out("unable to read from host file, or write its contents to /tmp")
+#        try:
+#            cmd = f"cat '{tmpfile}' | perl host_replace_{proto}.pl {filepath}"
+#            cmd_out = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+#        except subprocess.CalledProcessError as exc:
+#            error_out("loopback conversion failed with error {}:\n".format(exc.output.decode()))
 
 def process_json(json_file, tmpfile):
     fn = os.path.basename(json_file.filename)
