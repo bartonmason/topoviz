@@ -298,7 +298,7 @@ def error_out(errstr):
     print(f"<script>var txt='{errstr}'; _throw_error(txt)</script>")
     raise SystemExit
 
-def process_xml(proto, opt, form, tmpfile, filepath):
+def process_xml(proto, opt, tmpfile, filepath):
     try:
         cmd = f"cat '{tmpfile}' | perl d3-{proto}-topo.pl {opt} > {filepath}"
         cmd_out = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -359,9 +359,12 @@ def main():
 
 #    db_file = "lab_isis.xml"
     fn = "lab_isis.xml"
-    tmpfile = f"/tmp/{fn}"
+    tmpfile = db_file
+
+#    tmpfile = f"/tmp/{fn}"
 #    with open(tmpfile, "wb") as foo:
 #        foo.write(db_file.read())
+
     output_db_file = re.sub(r" ", "_", db_file)
     ts = datetime.datetime.strftime(datetime.datetime.now(), "%y%m%d%H%M%S")
     filepath = f"json/{output_db_file}-{ts}"
@@ -374,7 +377,7 @@ def main():
     key = isis_key
     opt = "default"
 #    db_file = "lab_isis.xml"
-    process_xml(proto, opt, form, tmpfile, filepath)
+    process_xml(proto, opt, tmpfile, filepath)
 
     # load remaining scripts and content elements
     body(key, dl, lsp_trace)
