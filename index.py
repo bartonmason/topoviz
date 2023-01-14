@@ -353,61 +353,36 @@ def process_json(json_file, tmpfile):
 def main():
     print("Content-type:text/html\r\n\r\n")
     print(header)
-    if os.environ.get('REQUEST_METHOD') and os.environ['REQUEST_METHOD'] == 'POST':
-        form = cgi.FieldStorage()
-        if not form["db_file"].filename:
-            error_out("no xml file provided")
 
-        # strip leading path from file name to avoid
-        # directory traversal attacks
-        db_file = form["db_file"]
-        fn = os.path.basename(db_file.filename)
-        tmpfile = f"/tmp/{fn}"
-        with open(tmpfile, "wb") as foo:
-            foo.write(db_file.file.read())
-        output_db_file = re.sub(r" ", "_", db_file.filename)
-        ts = datetime.datetime.strftime(datetime.datetime.now(), "%y%m%d%H%M%S")
-        filepath = f"json/{output_db_file}-{ts}"
-        dl = f"{output_db_file}-{ts}";
+    db_file = "lab_isis.xml"
+    fn = os.path.basename(db_file.filename)
+    tmpfile = f"/tmp/{fn}"
+    with open(tmpfile, "wb") as foo:
+        foo.write(db_file.file.read())
+    output_db_file = re.sub(r" ", "_", db_file.filename)
+    ts = datetime.datetime.strftime(datetime.datetime.now(), "%y%m%d%H%M%S")
+    filepath = f"json/{output_db_file}-{ts}"
+    dl = f"{output_db_file}-{ts}";
 
 
-        opt = ""
-        lsp_trace = lsp_trace_div
+    opt = ""
+    lsp_trace = lsp_trace_div
+    proto = "isis"
+    key = isis_key
+    opt = "default"
+    db_file = "lab_isis.xml"
+    process_xml(proto, opt, form, tmpfile, filepath)
 
-        if form.getvalue("ospf"):
-            proto = "ospf"
-            key = ospf_key
-            db_file = form["db_file"]
-            process_xml(proto, opt, form, tmpfile, filepath)
-        elif form.getvalue("isis"):
-            proto = "isis"
-            key = isis_key
-            opt = form.getvalue("opt")
-            db_file = form["db_file"]
-            process_xml(proto, opt, form, tmpfile, filepath)
-        elif form.getvalue("ted"):
-            proto = "ted"
-            key = ted_key
-            lsp_trace = ""
-            db_file = form["db_file"]
-            process_xml(proto, opt, form, tmpfile, filepath)
-        elif form.getvalue("import_json"):
-            json_file = form["db_file"]
-            filepath, dl, proto = process_json(json_file, tmpfile)
-            key = eval(f"{proto}_key")
-            if proto == "ted":
-                lsp_trace = "" 
+    # load remaining scripts and content elements
+    body(key, dl, lsp_trace)
 
-        # load remaining scripts and content elements
-        body(key, dl, lsp_trace)
+    # json creation/transform completed, its time to render
+    print(f"<script>var file='{filepath}';var proto='{proto}';var args='{opt}';_get_json(file,proto,args);</script>")
+    print(footer)
 
-        # json creation/transform completed, its time to render
-        print(f"<script>var file='{filepath}';var proto='{proto}';var args='{opt}';_get_json(file,proto,args);</script>")
-        print(footer)
-
-    else:
-        print(modal)
-        print(footer)
+#    else:
+#        print(modal)
+#        print(footer)
 
 if __name__ == "__main__":
     main()
