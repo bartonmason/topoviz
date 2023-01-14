@@ -355,7 +355,7 @@ def main():
     print(header)
 
     db_file = "lab_isis.xml"
-    fn = os.path.basename(db_file.filename)
+    fn = "lab_isis.xml"
     tmpfile = f"/tmp/{fn}"
     with open(tmpfile, "wb") as foo:
         foo.write(db_file.file.read())
