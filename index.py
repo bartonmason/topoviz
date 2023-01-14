@@ -89,10 +89,32 @@ modal = """
             <form action='index.py' method='POST' id='input' enctype='multipart/form-data'>
                 <div id=tabs class=tabs>
                   <ul>
+                    <li><a class='ospf_tab' href='#ospf_tab'>OSPF</a></li>
                     <li><a class='isis_tab' href='#isis_tab'>ISIS</a></li>
                     <li><a class='ted_tab' href='#ted_tab'>TED</a></li>
                     <li><a class='import_json_tab' href='#import_json_tab'>IMPORT JSON</a></li>
                   </ul>
+                  <div id='ospf_tab'>
+                      </br>Save the db to a file:</br>
+                      <b>'show ospf database router extensive | display xml | no-more | save &ltfile&gt'</b>
+                      </br></br>
+                      <fieldset>
+                          <legend>Select XML file</legend>
+                          <div class=ospf_db_upload>
+                              <input type='file' class='upload' name='db_file' />
+                              <input class='upload' type='hidden' name='ospf' value='True' />
+                          </div>
+                      </fieldset>
+                      </br>
+                      <fieldset>
+                          <legend>Select /etc/hosts file (optional, converts lo0 ip to hostname)</legend>
+                          <div class=ospf_host_upload>
+                              <input type='file' class='upload' name='host_file' />
+                          </div>
+                      </fieldset>
+                      </br></br>
+                      <button type='button' id='submitBtn_ospf' class='submitBtn'>Import</button>
+                  </div>
                   <div id='isis_tab'>
                       </br>Save the db to a file:</br>
                       <b>'show isis database extensive | display xml | no-more | save &ltfile&gt'</b>
@@ -146,6 +168,36 @@ modal = """
         </div> <!-- end of modal -->
 """
 
+ospf_key = """
+                <div id=ospf_key class=key>
+                    <svg height=100% width=100%>
+                        <g>
+                            <circle cx='40' cy='40'  r='15' stroke='DarkBlue' stroke-width='2' fill='Blue' />
+                            <text class='keytext' x='50' y='40' dx='20' dy='5'>Non ABR/Non ASBR</text>
+                            <circle cx='40' cy='90' r='15' stroke='DarkGreen' stroke-width='2' fill='Green' />
+                            <text class=keytext x='50' y='90' dx='20' dy='5'>ABR</text>
+                            <circle cx='40' cy='140' r='15' stroke='DarkCyan' stroke-width='2' fill='CadetBlue' />
+                            <text class=keytext x='50' y='140' dx='20' dy='5'>ASBR</text>
+                            <circle cx='40' cy='190' r='15' stroke='Indigo' stroke-width='2' fill='RebeccaPurple' />
+                            <text class=keytext x='50' y='190' dx='20' dy='5'>ABR + ASBR</text>
+                            <circle cx='40' cy='240' r='15' stroke='BurlyWood' stroke-width='2' fill='Cornsilk' />
+                            <text class=keytext x='50' y='240' dx='20' dy='5'>virtual link endpoint</text>
+                            <circle cx='40' cy='290' r='15' stroke='DarkOliveGreen' stroke-width='2' fill='DarkKhaki' />
+                            <text class=keytext x='50' y='290' dx='20' dy='5'>wild-card multicast receiver</text>
+                            <circle cx='40' cy='340' r='15' stroke='DarkSalmon' stroke-width='2' fill='LightSalmon' />
+                            <text class=keytext x='50' y='340' dx='20' dy='5'>NSSA border router</text>
+                            <circle cx='40' cy='390' r='15' stroke='Plum' stroke-width='2' fill='Pink' />
+                            <text class=keytext x='50' y='390' dx='20' dy='5'>Non Transit router</text>
+                            <circle cx='40' cy='440' r='15' stroke='#6091d2' stroke-width='2' fill='#aec7e8' />
+                            <text class=keytext x='50'y='440' dx='20' dy='5'>P2P Segment (subnet + mask)</text>
+                            <circle cx='40' cy='490' r='15' stroke='#ff8533' stroke-width='2' fill='#ffc299' />
+                            <text class=keytext x='50'y='490' dx='20' dy='5'>Bcast Segment (ip is DR)</text>
+                            <circle cx='40' cy='540' r='15' stroke='#33ff77' stroke-width='2' fill='#99ffbb' />
+                            <text class=keytext x='50'y='540' dx='20' dy='5'>P2MP Segment</text>
+                        </g>
+                    </svg>
+                </div>
+"""
 
 isis_key = """
                 <div id=isis_key class=key>
@@ -322,7 +374,12 @@ def main():
         opt = ""
         lsp_trace = lsp_trace_div
 
-        if form.getvalue("isis"):
+        if form.getvalue("ospf"):
+            proto = "ospf"
+            key = ospf_key
+            db_file = form["db_file"]
+            process_xml(proto, opt, form, tmpfile, filepath)
+        elif form.getvalue("isis"):
             proto = "isis"
             key = isis_key
             opt = form.getvalue("opt")
