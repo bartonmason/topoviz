@@ -359,11 +359,11 @@ def main():
 
 #    db_file = "lab_isis.xml"
     fn = "lab_isis.xml"
-    tmpfile = db_file
+    tmpfile = f"/tmp/{fn}"
 
-#    tmpfile = f"/tmp/{fn}"
-#    with open(tmpfile, "wb") as foo:
-#        foo.write(db_file.read())
+    with open(tmpfile, "w") as foo:
+        with open("lab_isis.xml") as input_file:
+            foo.write(input_file.read())
 
     output_db_file = re.sub(r" ", "_", db_file)
     ts = datetime.datetime.strftime(datetime.datetime.now(), "%y%m%d%H%M%S")
@@ -371,11 +371,11 @@ def main():
     dl = f"{output_db_file}-{ts}";
 
 
-    opt = ""
-    lsp_trace = lsp_trace_div
-    proto = "isis"
-    key = isis_key
-    opt = "default"
+opt = ""
+lsp_trace = lsp_trace_div
+proto = "isis"
+key = isis_key
+opt = "default"
 #    db_file = "lab_isis.xml"
     process_xml(proto, opt, tmpfile, filepath)
 
