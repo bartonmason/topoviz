@@ -309,9 +309,7 @@ def main():
         # strip leading path from file name to avoid
         # directory traversal attacks
         db_file = form["db_file"]
-        print(db_file)
         fn = os.path.basename(db_file.filename)
-        print(fn)
         tmpfile = f"/tmp/{fn}"
         with open(tmpfile, "wb") as foo:
             foo.write(db_file.file.read())
