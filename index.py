@@ -358,8 +358,8 @@ def main():
     fn = "lab_isis.xml"
     tmpfile = f"/tmp/{fn}"
     with open(tmpfile, "wb") as foo:
-        foo.write(db_file.file.read())
-    output_db_file = re.sub(r" ", "_", db_file.filename)
+        foo.write(db_file.read())
+    output_db_file = re.sub(r" ", "_", db_file)
     ts = datetime.datetime.strftime(datetime.datetime.now(), "%y%m%d%H%M%S")
     filepath = f"json/{output_db_file}-{ts}"
     dl = f"{output_db_file}-{ts}";
