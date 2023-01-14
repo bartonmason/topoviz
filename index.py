@@ -354,7 +354,10 @@ def main():
     print("Content-type:text/html\r\n\r\n")
     print(header)
 
-    db_file = "lab_isis.xml"
+    with open("lab_isis.xml") as input_file:
+        db_file = input_file.read()
+
+#    db_file = "lab_isis.xml"
     fn = "lab_isis.xml"
     tmpfile = f"/tmp/{fn}"
     with open(tmpfile, "wb") as foo:
@@ -370,7 +373,7 @@ def main():
     proto = "isis"
     key = isis_key
     opt = "default"
-    db_file = "lab_isis.xml"
+#    db_file = "lab_isis.xml"
     process_xml(proto, opt, form, tmpfile, filepath)
 
     # load remaining scripts and content elements
