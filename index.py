@@ -371,11 +371,11 @@ def main():
     dl = f"{output_db_file}-{ts}";
 
 
-opt = ""
-lsp_trace = lsp_trace_div
-proto = "isis"
-key = isis_key
-opt = "default"
+    opt = ""
+    lsp_trace = lsp_trace_div
+    proto = "isis"
+    key = isis_key
+    opt = "default"
 #    db_file = "lab_isis.xml"
     process_xml(proto, opt, tmpfile, filepath)
 
