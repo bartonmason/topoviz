@@ -365,7 +365,7 @@ def main():
         with open("lab_isis.xml") as input_file:
             foo.write(input_file.read())
 
-    output_db_file = re.sub(r" ", "_", db_file)
+    output_db_file = re.sub(r" ", "_", fn)
     ts = datetime.datetime.strftime(datetime.datetime.now(), "%y%m%d%H%M%S")
     filepath = f"json/{output_db_file}-{ts}"
     dl = f"{output_db_file}-{ts}";
